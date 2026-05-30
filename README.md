@@ -8,9 +8,24 @@ Target demo requirement: final story duration >= 30 seconds (for example 4 shots
 
 ## Demo Video
 
-Link: https://www.youtube.com/watch?v=MSb9vTwcIac
+### YouTube
 
-[![VibeCine demo video](https://img.youtube.com/vi/MSb9vTwcIac/maxresdefault.jpg)](https://www.youtube.com/watch?v=MSb9vTwcIac&feature=youtu.be)
+**[Watch on YouTube](https://www.youtube.com/watch?v=MSb9vTwcIac)**
+
+[![Watch the VibeCine demo on YouTube](https://img.youtube.com/vi/MSb9vTwcIac/hqdefault.jpg)](https://www.youtube.com/watch?v=MSb9vTwcIac)
+
+> GitHub does not embed YouTube players in README. Use the link above, or click the thumbnail.  
+> If the image does not load, `maxresdefault.jpg` may be missing for this video — `hqdefault.jpg` is used instead.
+
+### In-repo demo (plays on GitHub)
+
+GitHub README supports **MP4 / WebM / MOV** via HTML `<video>`, not WMV. The source file `demo_official.wmv` was converted to:
+
+`docs/demo_official.mp4`
+
+<video src="docs/demo_official.mp4" controls width="100%">
+  <a href="docs/demo_official.mp4">Download demo (MP4)</a>
+</video>
 
 ## Creative Concept / Problem Statement
 
@@ -60,27 +75,24 @@ Continuity trick:
 
 ### Step 5. Final Output (>= 30s)
 
-For MVP speed and reliability, we do not merge clips into a single MP4 on the server.
-
-Instead:
-
-- The app plays clips sequentially in a single “Final Output” player (1 -> 2 -> 3 -> 4)
-- We keep shot duration >= 10s to guarantee total >= 30s for a 3-5 shot storyboard
-
-If you need a single exported MP4, add server-side ffmpeg after the demo.
+- Click **Combine final video** on the Final Output node to merge completed clips (server-side ffmpeg).
+- Preview and download the combined MP4 in the same node.
+- Shot duration is tuned so a 3–5 shot storyboard can reach **>= 30s** total.
 
 ## Architecture (Diagram)
 
 ```mermaid
 flowchart LR
-  UI[Next.js UI / React Flow] --> Store[Zustand Store]
-  Store -->|POST /api/generate-storyboard| TRAE[TRAE Storyboard Generator]
-  Store -->|POST /api/generate-video (multipart - prompt + image)| API[Next.js Route Handler]
-  API -->|spawn pixverse CLI| CLI[PixVerse CLI]
-  CLI --> PV[PixVerse]
-  PV -->|video url| CLI
-  CLI --> API --> Store --> UI
-  Store --> Player[Final Output Player (sequential clips)]
+  UI["Next.js UI / React Flow"] --> Store["Zustand Store"]
+  Store -->|"POST /api/generate-storyboard"| TRAE["TRAE Storyboard Generator"]
+  Store -->|"POST /api/generate-video"| API["Next.js Route Handler"]
+  API -->|"spawn pixverse CLI"| CLI["PixVerse CLI"]
+  CLI --> PV["PixVerse"]
+  PV -->|"video URL"| CLI
+  CLI --> API
+  API --> Store
+  Store --> Stitch["POST /api/stitch"]
+  Stitch --> Player["Final Output Player"]
   Player --> UI
 ```
 
@@ -176,7 +188,7 @@ Open: http://localhost:3000
 3) Click “Generate storyboard”
 4) Edit shot prompts (optional)
 5) Click “Generate all videos”
-6) Click “Play full story” to show a single-player 30s+ story
+6) Click **Combine final video** to merge clips and preview the full story (30s+)
 
 ## Key Files
 

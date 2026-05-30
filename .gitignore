@@ -3,3 +3,6 @@
 .env.local
 .next
 .agents
+
+# Keep MP4 in docs/ for README; optional local WMV source (large)
+demo_official.wmv
